@@ -1,0 +1,39 @@
+FROM debian:latest
+
+# Устанавливаем базовые пакеты
+RUN apt-get update && \
+
+    apt-get install -y --no-install-recommends \
+    docker-compose \
+    openssh-client \
+    ansible \
+    python3 \
+    python3-pip \
+    python3-venv \
+    sshpass \
+    docker.io \
+    git \
+    curl \
+    jq \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+   #&& python3 -m venv /opt/venv
+
+# Устанавливаем Docker CLI официальным способом
+RUN install -m 0755 -d /etc/apt/keyrings && \
+
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends docker-ce-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Создаем виртуальное окружение для Python пакетов
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Устанавливаем Python пакеты и Ansible коллекции
+RUN pip3 install --no-cache-dir ansible-core && \
+
+    ansible-galaxy collection install community.docker
