@@ -1,0 +1,43 @@
+stages:
+  - build
+
+variables:
+  CI_DEBUG_SERVICES: "true"
+  DOCKER_HOST: tcp://docker:2376/
+build_image:
+  stage: build
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:latest
+  services:
+    - name: docker:dind
+    # NOTE: The alias is key to resolving the DNS issue.
+      alias: docker
+  variables:
+    IMAGE_NAME: $CI_REGISTRY/infrastructure/retn-images/ansible-build/ansible-image
+  
+  before_script:
+    - echo "Checking files in directory:"
+    - ls -la  # Это покажет все файлы в текущей директории
+  script:
+    - echo "Building Docker image..."
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    
+    # Сборка с  указанием пути к Dockerfile
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_REF_SLUG -f ./Dockerfile .
+    
+    # Тегирование и push
+    - docker tag $IMAGE_NAME:$CI_COMMIT_REF_SLUG $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$CI_COMMIT_REF_SLUG
+    - docker push $IMAGE_NAME:latest
+    
+    - echo "Image successfully built and pushed"
+
+  after_script:
+    - docker logout ${CI_REGISTRY}
+    - docker logout ${CI_DEPENDENCY_PROXY_SERVER}
+  tags:
+    - docker
+    - dind
+  only: 
+    # Ограничения на ветки в которых приходит выполнение
+    - main
