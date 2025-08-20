@@ -21,7 +21,7 @@
 Образ оптимизирован для быстрых и безопасных развертываний в GitLab CI/CD.
 Что бы использовать данный образ, необходимо добавить в ваш пайплайн этот образ.
 
-$CI_REGISTRY/infrastructure/images/ansible-build/ansible-image:latest
+$CI_REGISTRY/.../ansible-image:latest
 
 Так же, не забываем дать доступ на сам проект с Ansible в Gitlab Settings--->CI/ID--->Job token permissions--->CI/CD job token allowlist
 И добавляем туда путь к своему проекту.
