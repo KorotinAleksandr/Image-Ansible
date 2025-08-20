@@ -12,7 +12,7 @@ build_image:
     # NOTE: The alias is key to resolving the DNS issue.
       alias: docker
   variables:
-    IMAGE_NAME: $CI_REGISTRY/infrastructure/images/ansible-build/ansible-image
+    IMAGE_NAME: $CI_REGISTRY/.../ansible-image:latest
   
   before_script:
     - echo "Checking files in directory:"
