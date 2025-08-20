@@ -2,20 +2,27 @@
 
 Образ основан на Debian и включает:
 
-1)Ansible Core + основные модули.
+1) Ansible Core + основные модули.
 
-2)Docker CLI (для управления контейнерами)
-OpenSSH (для подключения к удалённым серверам)
-Python 3 + pip (для работы Ansible)+Создаем виртуальное окружение для Python пакетов
+2) Docker CLI (для управления контейнерами).
+
+3) OpenSSH (для подключения к удалённым серверам).
+4) 
+5) Python 3 + pip (для работы Ansible)+Создаем виртуальное окружение для Python пакетов.
+
 Дополнительные утилиты:
-git, curl, jq
-sshpass (для автоматизации SSH-аутентификации)
-docker-compose
+
+1) git, curl, jq.
+
+2) sshpass (для автоматизации SSH-аутентификации).
+
+3) docker\docker-compose.
+
 Образ оптимизирован для быстрых и безопасных развертываний в GitLab CI/CD.
 Что бы использовать данный образ, необходимо добавить в ваш пайплайн этот образ.
 
 $CI_REGISTRY/infrastructure/images/ansible-build/ansible-image:latest
 
-Так же, не забываем дать доступ на сам проект с Ansible в гитлабе Settings--->CI/ID--->Job token permissions--->CI/CD job token allowlist
+Так же, не забываем дать доступ на сам проект с Ansible в Gitlab Settings--->CI/ID--->Job token permissions--->CI/CD job token allowlist
 И добавляем туда путь к своему проекту.
 После этого доступность должна появиться. У меня сборка кода стала выполняться на +- 2 минуты быстрее, что значительно понизило время ожидания.
